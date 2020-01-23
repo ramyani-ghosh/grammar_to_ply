@@ -1,0 +1,189 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> funcdef
+Rule 1     funcdef -> NAME LPAREN parameters RPAREN COLON funcbody
+Rule 2     parameters -> NAME
+Rule 3     parameters -> NAME HYPHEN parameters
+Rule 4     parameters -> empty
+Rule 5     funcbody -> TAB statement
+Rule 6     funcbody -> TAB statement funcbody
+Rule 7     statement -> NAME
+Rule 8     statement -> NAME statement
+Rule 9     empty -> <empty>
+
+Terminals, with rules where they appear
+
+COLON                : 1
+HYPHEN               : 3
+LPAREN               : 1
+NAME                 : 1 2 3 7 8
+RPAREN               : 1
+TAB                  : 5 6
+error                : 
+
+Nonterminals, with rules where they appear
+
+empty                : 4
+funcbody             : 1 6
+funcdef              : 0
+parameters           : 1 3
+statement            : 5 6 8
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . funcdef
+    (1) funcdef -> . NAME LPAREN parameters RPAREN COLON funcbody
+
+    NAME            shift and go to state 2
+
+    funcdef                        shift and go to state 1
+
+state 1
+
+    (0) S' -> funcdef .
+
+
+
+state 2
+
+    (1) funcdef -> NAME . LPAREN parameters RPAREN COLON funcbody
+
+    LPAREN          shift and go to state 3
+
+
+state 3
+
+    (1) funcdef -> NAME LPAREN . parameters RPAREN COLON funcbody
+    (2) parameters -> . NAME
+    (3) parameters -> . NAME HYPHEN parameters
+    (4) parameters -> . empty
+    (9) empty -> .
+
+    NAME            shift and go to state 4
+    RPAREN          reduce using rule 9 (empty -> .)
+
+    parameters                     shift and go to state 5
+    empty                          shift and go to state 6
+
+state 4
+
+    (2) parameters -> NAME .
+    (3) parameters -> NAME . HYPHEN parameters
+
+    RPAREN          reduce using rule 2 (parameters -> NAME .)
+    HYPHEN          shift and go to state 7
+
+
+state 5
+
+    (1) funcdef -> NAME LPAREN parameters . RPAREN COLON funcbody
+
+    RPAREN          shift and go to state 8
+
+
+state 6
+
+    (4) parameters -> empty .
+
+    RPAREN          reduce using rule 4 (parameters -> empty .)
+
+
+state 7
+
+    (3) parameters -> NAME HYPHEN . parameters
+    (2) parameters -> . NAME
+    (3) parameters -> . NAME HYPHEN parameters
+    (4) parameters -> . empty
+    (9) empty -> .
+
+    NAME            shift and go to state 4
+    RPAREN          reduce using rule 9 (empty -> .)
+
+    parameters                     shift and go to state 9
+    empty                          shift and go to state 6
+
+state 8
+
+    (1) funcdef -> NAME LPAREN parameters RPAREN . COLON funcbody
+
+    COLON           shift and go to state 10
+
+
+state 9
+
+    (3) parameters -> NAME HYPHEN parameters .
+
+    RPAREN          reduce using rule 3 (parameters -> NAME HYPHEN parameters .)
+
+
+state 10
+
+    (1) funcdef -> NAME LPAREN parameters RPAREN COLON . funcbody
+    (5) funcbody -> . TAB statement
+    (6) funcbody -> . TAB statement funcbody
+
+    TAB             shift and go to state 12
+
+    funcbody                       shift and go to state 11
+
+state 11
+
+    (1) funcdef -> NAME LPAREN parameters RPAREN COLON funcbody .
+
+    $end            reduce using rule 1 (funcdef -> NAME LPAREN parameters RPAREN COLON funcbody .)
+
+
+state 12
+
+    (5) funcbody -> TAB . statement
+    (6) funcbody -> TAB . statement funcbody
+    (7) statement -> . NAME
+    (8) statement -> . NAME statement
+
+    NAME            shift and go to state 14
+
+    statement                      shift and go to state 13
+
+state 13
+
+    (5) funcbody -> TAB statement .
+    (6) funcbody -> TAB statement . funcbody
+    (5) funcbody -> . TAB statement
+    (6) funcbody -> . TAB statement funcbody
+
+    $end            reduce using rule 5 (funcbody -> TAB statement .)
+    TAB             shift and go to state 12
+
+    funcbody                       shift and go to state 15
+
+state 14
+
+    (7) statement -> NAME .
+    (8) statement -> NAME . statement
+    (7) statement -> . NAME
+    (8) statement -> . NAME statement
+
+    TAB             reduce using rule 7 (statement -> NAME .)
+    $end            reduce using rule 7 (statement -> NAME .)
+    NAME            shift and go to state 14
+
+    statement                      shift and go to state 16
+
+state 15
+
+    (6) funcbody -> TAB statement funcbody .
+
+    $end            reduce using rule 6 (funcbody -> TAB statement funcbody .)
+
+
+state 16
+
+    (8) statement -> NAME statement .
+
+    TAB             reduce using rule 8 (statement -> NAME statement .)
+    $end            reduce using rule 8 (statement -> NAME statement .)
+

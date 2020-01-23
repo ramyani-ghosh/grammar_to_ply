@@ -13,7 +13,7 @@ dict= {}
 for line in lines:
     lr = line.split(":=")
     rule_right = lr[1].strip()
-    rule_right = rule_right.replace("|","\n|")
+    rule_right = rule_right.replace("|","\n\t|")
     dict[lr[0].strip()] = rule_right
 
 #print(dict)
@@ -35,6 +35,7 @@ for token in dict['tokens'].split(" "):
     tokens.append(t[0].split("_")[1])
     locals().update(tokens_temp)
 
+print("TOKENS GENERATED: ", tokens,"\n\n")
 #start production
 start_dict={}
 start_dict['start'] = dict['start']
@@ -77,7 +78,7 @@ for line in dict:
     if line not in ['start','reserved','tokens']:
         function = "\ndef p_"+line+"(t):\n\t\'\'\'"+line+ " : " +dict[line] + "\'\'\' "
         action_funcs = action_funcs + function + "\n"
-
+print("ACTION FUNCTIONS GENERATED: ", action_funcs,"\n\n")
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
 
@@ -86,7 +87,7 @@ codesegment=''' foo(a-b-para):
 \tsome_statement
 \treturn a'''
 
-print("\n\n  EXECUTING CODE SEGMENT:\n", "_"*40, "\n",codesegment,"\n","_"*40,"\n\n")
+print("\n\n  PARSING CODE SEGMENT:\n", "_"*40, "\n",codesegment,"\n","_"*40,"\n\n")
 execute_code = action_funcs +'''\n\nimport ply.yacc as yacc
 parser = yacc.yacc()
 yacc.parse(codesegment)\n\n'''
